@@ -1,7 +1,9 @@
 package com.example.feb2024.service;
 
+import com.example.feb2024.kafka.KafkaProducerService;
 import com.example.feb2024.model.Student;
 import com.example.feb2024.repository.StudentRepository;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import org.apache.catalina.valves.StuckThreadDetectionValve;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -14,6 +16,9 @@ public class StudentService {
 
     @Autowired
     StudentRepository studentRepository;
+
+    @Autowired
+    KafkaProducerService kafkaProducerService;
 
     public List<Student> getAllStudents(){
         return studentRepository.findAll();
@@ -36,8 +41,9 @@ public class StudentService {
         return studentRepository.findById(rollno).isPresent();
     }
 
-    public void upsertStudent(Student student){
-        studentRepository.save(student);
+    public void upsertStudent(Student student)throws JsonProcessingException {
+        kafkaProducerService.sendSimpleMessage(student);
+        //studentRepository.save(student);
         //insert or update
     }
 

@@ -3,6 +3,7 @@ package com.example.feb2024.controller;
 import com.example.feb2024.dto.StudentResponseDto;
 import com.example.feb2024.model.Student;
 import com.example.feb2024.service.StudentService;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -43,12 +44,12 @@ public class StudentController {
     }
 
     @PostMapping("/upsert")
-    public void addStudent(@RequestBody Student student){
+    public void addStudent(@RequestBody Student student)throws JsonProcessingException{
         studentService.upsertStudent(student);
     }
 
     @PutMapping("/update/{rollno}")
-    public ResponseEntity<Object> updateStudent(@PathVariable("rollno") int rollno, @RequestBody Student student){
+    public ResponseEntity<Object> updateStudent(@PathVariable("rollno") int rollno, @RequestBody Student student) throws JsonProcessingException {
         if(!studentService.isStudentPresent(rollno))
             return new ResponseEntity<>("STUDENT DOESN'T EXIST", HttpStatus.BAD_REQUEST);
         else {
